@@ -3,8 +3,8 @@ package com.bukkit.mcteam.factions.commands;
 public class FCommandChat extends FBaseCommand {
 	
 	public FCommandChat() {
-		aliases.add("chat");
-		aliases.add("c");
+		aliases.add("fchat");
+		aliases.add("fc");
 		
 		helpDescription = "Switch faction only chat on and off";
 	}
@@ -18,10 +18,16 @@ public class FCommandChat extends FBaseCommand {
 			// Turn on
 			me.setFactionChatting(true);
 			sendMessage("Faction-only chat ENABLED.");
+			
+			if (me.isAllyChatting()) {
+				me.setAllyChatting(false);
+				sendMessage("Faction-only chat DISABLED.");
+			}
+			
 		} else {
 			// Turn off
 			me.setFactionChatting(false);
-			sendMessage("Faction-only chat DISABLED.");
+			sendMessage("Ally-only chat DISABLED.");
 		}
 	}
 	

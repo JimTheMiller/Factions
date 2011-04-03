@@ -45,6 +45,7 @@ public class FPlayer {
 	private long lastLoginTime;
 	private transient boolean mapAutoUpdating;
 	private boolean factionChatting; 
+	private boolean allyChatting;
 	
 	// -------------------------------------------- //
 	// Construct
@@ -123,6 +124,17 @@ public class FPlayer {
 
 	public void setFactionChatting(boolean factionChatting) {
 		this.factionChatting = factionChatting;
+	}
+	
+	public boolean isAllyChatting() {
+		if (this.factionId == 0) {
+			return false;
+		}
+		return allyChatting;
+	}
+	
+	public void setAllyChatting(boolean allyChatting) {
+		this.allyChatting = allyChatting;
 	}
 	
 	public long getLastLoginTime() {

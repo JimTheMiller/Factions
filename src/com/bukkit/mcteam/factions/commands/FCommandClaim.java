@@ -60,7 +60,7 @@ public class FCommandClaim extends FBaseCommand {
 			}
 			
 			if ( ! Board.isBorderLocation(flocation)) {
-				sendMessage("You must start claiming land at the border of the territory.");
+				sendMessage("You must start claiming land at the corners of the territory.");
 				return;
 			}
 			

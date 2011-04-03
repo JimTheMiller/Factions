@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.bukkit.mcteam.factions.commands.FBaseCommand;
 import com.bukkit.mcteam.factions.commands.FCommandAdmin;
 import com.bukkit.mcteam.factions.commands.FCommandChat;
+import com.bukkit.mcteam.factions.commands.FCommandAllyChat;
 import com.bukkit.mcteam.factions.commands.FCommandClaim;
 import com.bukkit.mcteam.factions.commands.FCommandCreate;
 import com.bukkit.mcteam.factions.commands.FCommandDeinvite;
@@ -98,6 +99,7 @@ public class Factions extends JavaPlugin {
 		commands.add(new FCommandHelp());
 		commands.add(new FCommandAdmin());
 		commands.add(new FCommandChat());
+		commands.add(new FCommandAllyChat());
 		commands.add(new FCommandClaim());
 		commands.add(new FCommandCreate());
 		commands.add(new FCommandDeinvite());

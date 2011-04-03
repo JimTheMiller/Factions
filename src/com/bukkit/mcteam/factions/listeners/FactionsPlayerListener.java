@@ -60,6 +60,15 @@ public class FactionsPlayerListener extends PlayerListener{
 			return;
 		}
 		
+		if (me.isAllyChatting()) {
+			Faction myFaction = me.getFaction();
+			String message = String.format(ChatColor.BLUE + myFaction.getTag() + " " + Conf.allyChatFormat, me.getNameAndRelevant(me), msg);
+			me.getFaction().sendMessageIncludingAllies(message);
+			Logger.getLogger("Minecraft").info("AllyChat "+me.getFaction().getTag()+": "+message);
+			event.setCancelled(true);
+			return;
+		}
+		
 		// Are we to insert the Faction tag into the format?
 		// If we are not to insert it - we are done.
 		if ( ! Conf.chatTagEnabled) {

@@ -42,6 +42,7 @@ public class Conf {
 	public static int chatTagInsertIndex = 1;
 	public static String chatTagFormat = "%s"+ChatColor.WHITE+" ";
 	public static String factionChatFormat = "%s"+ChatColor.WHITE+" %s";
+	public static String allyChatFormat = "%s"+ChatColor.WHITE+" %s";
 	
 	public static boolean allowNoSlashCommand = true;
 	

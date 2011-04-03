@@ -302,6 +302,17 @@ public class Faction {
 		}
 	}
 	
+	public void sendMessageIncludingAllies(String message) {
+		sendMessage(message);
+		for (Integer key : this.relationWish.keySet()) {
+			Relation relation = this.relationWish.get(key);
+			if (relation == Relation.ALLY) {
+				Faction faction = Faction.instances.get(key);
+				faction.sendMessage(message);
+			}
+		}	
+	}
+	
 	public void sendMessage(List<String> messages) {
 		for (FPlayer fplayer : this.getFPlayersWhereOnline(true)) {
 			fplayer.sendMessage(messages);
