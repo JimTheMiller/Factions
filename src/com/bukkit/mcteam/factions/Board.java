@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import org.bukkit.ChatColor;
 
 import com.bukkit.mcteam.factions.util.TextUtil;
+import com.bukkit.mcteam.factions.struct.Relation;
 import com.bukkit.mcteam.gson.reflect.TypeToken;
 import com.bukkit.mcteam.gson.JsonArray;
 import com.bukkit.mcteam.gson.JsonElement;
@@ -143,16 +144,17 @@ public class Board {
 			String row = "";
 			for (int dz = 0; dz > -width; dz--) {
 				if(dz == -(halfWidth) && dx == halfHeight) {
-					row += ChatColor.AQUA+"+";
+					row += ChatColor.AQUA+"P";
 				} else {
 					FLocation flocationHere = topLeft.getRelative(dx, dz);
 					Faction factionHere = getFactionAt(flocationHere);
 					if (factionHere.isNone()) {
 						row += ChatColor.GRAY+"-";
 					} else if (factionHere.isSafeZone()) {
-						row += ChatColor.GOLD+"+";
+						row += ChatColor.GOLD+"S";
 					} else {
-						row += factionHere.getRelation(faction).getColor()+"+";
+						Relation relation = factionHere.getRelation(faction);
+						row += relation.getColor() + relation.getSymbol();
 					}
 				}
 			}

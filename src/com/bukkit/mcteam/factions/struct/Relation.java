@@ -34,4 +34,16 @@ public enum Relation {
 			return Conf.colorEnemy;
 		}
 	}
+	
+	public String getSymbol() {
+		if (this == Relation.MEMBER) {
+			return "F";
+		} else if (this == Relation.ALLY) {
+			return "A";
+		} else if (this == Relation.NEUTRAL) {
+			return "N";
+		} else { //if (relation == FactionRelation.ENEMY) {
+			return "E";
+		}
+	}
 }
