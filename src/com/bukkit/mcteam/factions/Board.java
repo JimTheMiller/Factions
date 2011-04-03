@@ -59,12 +59,29 @@ public class Board {
 	// Is this coord NOT completely surrounded by coords claimed by the same faction?
 	// Simpler: Is there any nearby coord with a faction other than the faction here?
 	public static boolean isBorderLocation(FLocation flocation) {
+		int orthogonallyowned = 0;
 		Faction faction = getFactionAt(flocation);
 		FLocation a = flocation.getRelative(1, 0);
 		FLocation b = flocation.getRelative(-1, 0);
 		FLocation c = flocation.getRelative(0, 1);
 		FLocation d = flocation.getRelative(0, -1);
-		return faction != getFactionAt(a) || faction != getFactionAt(b) || faction != getFactionAt(c) || faction != getFactionAt(d);
+		if (faction == getFactionAt(a)) {
+			orthogonallyowned += 1;
+		}
+		if (faction == getFactionAt(b)) {
+			orthogonallyowned += 1;
+		}
+		if (faction == getFactionAt(c)) {
+			orthogonallyowned += 1;
+		}
+		if (faction == getFactionAt(d)) {
+			orthogonallyowned += 1;
+		}
+		if (orthogonallyowned < 3) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	
