@@ -88,6 +88,10 @@ public class FactionsPlayerListener extends PlayerListener{
 			
 			for (Player listeningPlayer : Factions.instance.getServer().getOnlinePlayers()) {
 				FPlayer you = FPlayer.get(listeningPlayer);
+				
+				if (you.isMapAutoUpdating())
+					continue;
+				
 				String yourFormat = formatStart + me.getChatTag(you) + formatEnd;
 				listeningPlayer.sendMessage(String.format(yourFormat, talkingPlayer.getDisplayName(), msg));
 			}
