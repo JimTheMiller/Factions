@@ -85,6 +85,28 @@ public class Board {
 		}
 	}
 	
+	public static int numberSurroundingPlots(FLocation flocation) {
+		int orthogonallyOwned = 0;
+		Faction faction = getFactionAt(flocation);
+		FLocation a = flocation.getRelative(1, 0);
+		FLocation b = flocation.getRelative(-1, 0);
+		FLocation c = flocation.getRelative(0, 1);
+		FLocation d = flocation.getRelative(0, -1);
+		if (faction == getFactionAt(a)) {
+			orthogonallyOwned += 1;
+		}
+		if (faction == getFactionAt(b)) {
+			orthogonallyOwned += 1;
+		}
+		if (faction == getFactionAt(c)) {
+			orthogonallyOwned += 1;
+		}
+		if (faction == getFactionAt(d)) {
+			orthogonallyOwned += 1;
+		}
+		return orthogonallyOwned;
+	}
+	
 	
 	//----------------------------------------------//
 	// Cleaner. Remove orphaned foreign keys

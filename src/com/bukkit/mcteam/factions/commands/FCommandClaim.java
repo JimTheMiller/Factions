@@ -59,8 +59,9 @@ public class FCommandClaim extends FBaseCommand {
 				return;
 			}
 			
-			if ( ! Board.isBorderLocation(flocation)) {
-				sendMessage("You must start claiming land at the corners of the territory.");
+			int plotsAround = Board.numberSurroundingPlots(flocation);
+			if (plotsAround > 1) {
+				sendMessage("There are still " + plotsAround + " surrounding plots.");
 				return;
 			}
 			
