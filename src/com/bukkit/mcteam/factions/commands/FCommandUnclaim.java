@@ -42,13 +42,30 @@ public class FCommandUnclaim extends FBaseCommand {
 		
 		
 		if ( myFaction != otherFaction) {
-			sendMessage("You don't own this land.");
-			return;
+			if ( ! otherFaction.hasLandInflation()) {
+				 // TODO more messages WARN current faction most importantly
+				sendMessage(me.getRelationColor(otherFaction)+otherFaction.getTag()+Conf.colorSystem+" owns this land and is strong enough to keep it.");
+				return;
+			}
+			
+			int plotsAround = Board.numberSurroundingPlots(flocation);
+			if (plotsAround > 2) {
+				sendMessage("There are still " + plotsAround + " surrounding plots.");
+				return;
+			}
+			Board.removeAt(flocation);
+			
+			otherFaction.sendMessage(me.getNameAndRelevant(otherFaction)+Conf.colorSystem+" unclaimed some of your land :O");
+			myFaction.sendMessage(me.getNameAndRelevant(myFaction)+Conf.colorSystem+" unclaimed some land from "+otherFaction.getTag(myFaction));
+			
+		} else {
+			
+			Board.removeAt(flocation);
+
+			myFaction.sendMessage(me.getNameAndRelevant(myFaction)+Conf.colorSystem+" unclaimed some land.");
 		}
 		
-		Board.removeAt(flocation);
-		
-		myFaction.sendMessage(me.getNameAndRelevant(myFaction)+Conf.colorSystem+" unclaimed some land.");
+		return;
 	}
 	
 }

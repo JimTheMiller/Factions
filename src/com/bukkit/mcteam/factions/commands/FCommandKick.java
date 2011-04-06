@@ -22,6 +22,12 @@ public class FCommandKick extends FBaseCommand {
 			return;
 		}
 		
+		if (player.isOp())
+		{
+			you.leave();
+			return;
+		}
+		
 		Faction myFaction = me.getFaction();
 
 		if (you.getFaction() != myFaction) {

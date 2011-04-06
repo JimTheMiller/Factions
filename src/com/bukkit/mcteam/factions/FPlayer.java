@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.bukkit.mcteam.factions.struct.Relation;
@@ -44,8 +45,10 @@ public class FPlayer {
 	private long lastPowerUpdateTime;
 	private long lastLoginTime;
 	private transient boolean mapAutoUpdating;
-	private boolean factionChatting; 
+	private boolean factionChatting;
 	private boolean allyChatting;
+	public boolean justRespawned;
+	private String lastDamanger;
 	
 	// -------------------------------------------- //
 	// Construct
@@ -55,7 +58,7 @@ public class FPlayer {
 	public FPlayer() {
 		this.resetFactionData();
 		this.power = this.getPowerMax();
-		this.lastPowerUpdateTime = System.currentTimeMillis();
+		//this.lastPowerUpdateTime = System.currentTimeMillis();
 		this.lastLoginTime = System.currentTimeMillis();
 		this.mapAutoUpdating = false;
 	}
@@ -302,10 +305,14 @@ public class FPlayer {
 	// Power
 	//----------------------------------------------//
 	public double getPower() {
-		this.updatePower();
+		//this.updatePower();
 		return this.power;
 	}
 	
+	public void addPower(double n) {
+		alterPower(n);
+	}
+		
 	protected void alterPower(double delta) {
 		this.power += delta;
 		if (this.power > this.getPowerMax()) {
@@ -336,6 +343,7 @@ public class FPlayer {
 		return (int) Math.round(this.getPowerMin());
 	}
 	
+	
 	protected void updatePower() {
 		long now = System.currentTimeMillis();
 		long millisPassed = now - this.lastPowerUpdateTime;
@@ -346,7 +354,7 @@ public class FPlayer {
 	}
 	
 	public void onDeath() {
-		this.updatePower();
+		//this.updatePower();
 		this.alterPower(-Conf.powerPerDeath);
 	}
 	
@@ -363,11 +371,35 @@ public class FPlayer {
 	}
 	
 	public void sendFactionHereMessage() {
-		Faction factionHere = Board.getFactionAt(new FLocation(this));
-		String msg = Conf.colorSystem+" ~ "+factionHere.getTag(this);
-		if (factionHere.getDescription().length() > 0) {
-			msg += " - "+factionHere.getDescription();
+		
+		if (this.getPlayer() == null)
+			return;
+		
+		FLocation here = new FLocation(this);
+		Claim claimHere = Board.getClaimAt(here);
+		String msg = Conf.colorSystem + "[" + here.getX() + ", " + here.getZ() + "] ";
+		
+		if (claimHere == null) {
+			
+			msg += "no faction";
+		
+		} else {
+			
+			Faction factionHere = Faction.get(claimHere.factionId);
+			
+			if (claimHere.access == ClaimAccess.MOD)
+				msg += ChatColor.RED + "[" + claimHere.access + "] " + Conf.colorSystem;
+			
+			if (claimHere.access == ClaimAccess.ALLY)
+				msg += ChatColor.BLUE + "[" + claimHere.access + "] " + Conf.colorSystem;
+			
+			msg += factionHere.getTag(this);
+			
+			if (factionHere.getDescription().length() > 0) {
+				msg += " - " + factionHere.getDescription();
+			}
 		}
+		
 		this.sendMessage(msg);
 	}
 	
@@ -565,5 +597,21 @@ public class FPlayer {
 			}
 		}
 		return true;
+	}
+
+	public void setLastDamangedBy(Entity damager) {
+		
+		if (damager instanceof Player)
+			this.lastDamanger = ((Player)damager).getName();
+		else
+			this.lastDamanger = "";
+	}
+	
+	public Entity getLastDamangedBy() {
+		
+		if (this.lastDamanger.equals(""))
+			return null;
+		
+		return getPlayer().getServer().getPlayer(this.lastDamanger);
 	}
 }

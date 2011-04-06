@@ -6,7 +6,7 @@ public class FCommandAllyChat extends FBaseCommand {
 		aliases.add("achat");
 		aliases.add("ac");
 		
-		helpDescription = "Switch faction only chat on and off";
+		helpDescription = "*NEW* Switch ally only chat on and off";
 	}
 	
 	public void perform() {

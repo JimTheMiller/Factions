@@ -174,17 +174,34 @@ public class Faction {
 	//----------------------------------------------//
 	public double getPower() {
 		double ret = 0;
+		double max = 0;
+		
 		for (FPlayer fplayer : this.getFPlayers()) {
 			ret += fplayer.getPower();
+			max += fplayer.getPowerMax();
 		}
+		
+		if (ret > getPowerMax())
+			ret = getPowerMax() - (max - ret);
+		
 		return ret;
 	}
 	
 	public double getPowerMax() {
 		double ret = 0;
-		for (FPlayer fplayer : this.getFPlayers()) {
-			ret += fplayer.getPowerMax();
-		}
+		
+		if (this.getFPlayers().size() == 1)
+			ret = 5;
+		
+		if (this.getFPlayers().size() == 2)
+			ret = 7;
+		
+		if (this.getFPlayers().size() == 3)
+			ret = 9;
+		
+		if (this.getFPlayers().size() > 3)
+			ret = 9 + (this.getFPlayers().size() - 3);
+		
 		return ret;
 	}
 	
@@ -308,7 +325,8 @@ public class Faction {
 			Relation relation = this.relationWish.get(key);
 			if (relation == Relation.ALLY) {
 				Faction faction = Faction.instances.get(key);
-				faction.sendMessage(message);
+				if (faction != null)
+					faction.sendMessage(message);
 			}
 		}	
 	}
@@ -491,4 +509,6 @@ public class Faction {
 		}
 		return true;
 	}
+
+	
 }

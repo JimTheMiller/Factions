@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.bukkit.mcteam.factions.Board;
+import com.bukkit.mcteam.factions.Claim;
 import com.bukkit.mcteam.factions.Conf;
 import com.bukkit.mcteam.factions.FLocation;
 import com.bukkit.mcteam.factions.FPlayer;
@@ -28,7 +29,7 @@ import com.bukkit.mcteam.factions.Factions;
 import com.bukkit.mcteam.factions.util.TextUtil;
 
 
-public class FactionsPlayerListener extends PlayerListener{
+public class FactionsPlayerListener extends PlayerListener {
 
 	@Override
 	public void onPlayerChat(PlayerChatEvent event) {
@@ -109,6 +110,7 @@ public class FactionsPlayerListener extends PlayerListener{
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		// Make sure that all online players do have a fplayer.
 		FPlayer me = FPlayer.get(event.getPlayer());
+		me.justRespawned = false;
 		
 		// Update the lastLoginTime for this fplayer
 		me.setLastLoginTime(System.currentTimeMillis());
@@ -122,6 +124,11 @@ public class FactionsPlayerListener extends PlayerListener{
 	public void onPlayerMove(PlayerMoveEvent event) {
 		FPlayer me = FPlayer.get(event.getPlayer());
 		
+		if (me.justRespawned)
+		{
+			me.justRespawned = false;
+			event.getPlayer().kickPlayer("You were killed, rejoin.");
+		}
 		// Did we change coord?
 		FLocation from = me.getLastStoodAt();
 		FLocation to = new FLocation(event.getTo());
@@ -135,14 +142,11 @@ public class FactionsPlayerListener extends PlayerListener{
 		me.setLastStoodAt(to);
 		
 		if (me.isMapAutoUpdating()) {
-			me.sendMessage(Board.getMap(me.getFaction(), to, me.getPlayer().getLocation().getYaw()));
+			Player player = me.getPlayer();
+			if (player != null)
+				me.sendMessage(Board.getMap(me.getFaction(), to, player.getLocation().getYaw()));
 		} else {
-			// Did we change "host"(faction)?
-			Faction factionFrom = Board.getFactionAt(from);
-			Faction factionTo = Board.getFactionAt(to);
-			if ( factionFrom != factionTo) {
-				me.sendFactionHereMessage();
-			}
+			me.sendFactionHereMessage();
 		}
 	}
 
@@ -176,7 +180,8 @@ public class FactionsPlayerListener extends PlayerListener{
 			return true; // Item isn't one we're preventing.
 		}
 
-		Faction otherFaction = Board.getFactionAt(new FLocation(block));
+		FLocation location = new FLocation(block);
+		Faction otherFaction = Board.getFactionAt(location);
 
 		if (otherFaction.isNone()) {
 			return true; // This is not faction territory. Use whatever you like here.
@@ -194,13 +199,17 @@ public class FactionsPlayerListener extends PlayerListener{
 		
 		Faction myFaction = me.getFaction();
 
-		// Cancel if we are not in our own territory
-		if (myFaction != otherFaction) {
-			me.sendMessage("You can't use "+TextUtil.getMaterialName(material)+" in the territory of "+otherFaction.getTag(myFaction));
-			return false;
-		}
-
-		return true;
+		Claim claim = Board.getClaimAt(location);
+		
+		if (claim == null)
+			return true;
+		
+		if (claim.canInteract(me)) {
+			return true;
+		} 
+		
+		me.sendMessage("You can't use "+TextUtil.getMaterialName(material)+" in the territory of "+otherFaction.getTag(myFaction));
+		return false;
 	}
 
 	public boolean canPlayerUseRightclickBlock(Player player, Block block) {
@@ -213,21 +222,32 @@ public class FactionsPlayerListener extends PlayerListener{
 
 		FPlayer me = FPlayer.get(player);
 		Faction myFaction = me.getFaction();
-		Faction otherFaction = Board.getFactionAt(new FLocation(block));
-
-		// In safe zones you may use any block...
-		if (otherFaction.isNormal() && myFaction != otherFaction) {
-			me.sendMessage("You can't use "+TextUtil.getMaterialName(material)+" in the territory of "+otherFaction.getTag(myFaction));
-			return false;
-		}
-
-		// You may use doors in both safeZone and wilderness
-		return true;
+		
+		FLocation location = new FLocation(block);
+		Faction otherFaction = Board.getFactionAt(location);
+		
+		if (!otherFaction.isNormal())
+			return true;
+		
+		Claim claim = Board.getClaimAt(location);
+		
+		if (claim == null)
+			return true;
+		
+		if (claim.canInteract(me)) {
+			return true;
+		} 
+		
+		me.sendMessage("You can't use "+TextUtil.getMaterialName(material)+" in the territory of "+otherFaction.getTag(myFaction));
+		return false;
 	}
 
 	@Override
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		FPlayer me = FPlayer.get(event.getPlayer());
+		
+		Player player = event.getPlayer();
+		FPlayer me = FPlayer.get(player);
+		me.justRespawned = true;
 		Location home = me.getFaction().getHome();
 		if (Conf.homesEnabled && Conf.homesTeleportToOnDeath && home != null) {
 			event.setRespawnLocation(home);
@@ -250,6 +270,7 @@ public class FactionsPlayerListener extends PlayerListener{
 			return;
 		}
 	}
+	
 	@Override
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
 		if (event.isCancelled()) {

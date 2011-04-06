@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.TreeType;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,9 +23,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.bukkit.mcteam.factions.commands.FBaseCommand;
+import com.bukkit.mcteam.factions.commands.FCommandAccess;
 import com.bukkit.mcteam.factions.commands.FCommandAdmin;
-import com.bukkit.mcteam.factions.commands.FCommandChat;
 import com.bukkit.mcteam.factions.commands.FCommandAllyChat;
+import com.bukkit.mcteam.factions.commands.FCommandChat;
 import com.bukkit.mcteam.factions.commands.FCommandClaim;
 import com.bukkit.mcteam.factions.commands.FCommandCreate;
 import com.bukkit.mcteam.factions.commands.FCommandDeinvite;
@@ -48,11 +52,14 @@ import com.bukkit.mcteam.factions.commands.FCommandTitle;
 import com.bukkit.mcteam.factions.commands.FCommandUnclaim;
 import com.bukkit.mcteam.factions.commands.FCommandVersion;
 import com.bukkit.mcteam.factions.listeners.FactionsBlockListener;
+import com.bukkit.mcteam.factions.listeners.FactionsChunkListener;
 import com.bukkit.mcteam.factions.listeners.FactionsEntityListener;
+import com.bukkit.mcteam.factions.listeners.FactionsIConomyListener;
 import com.bukkit.mcteam.factions.listeners.FactionsPlayerListener;
 import com.bukkit.mcteam.gson.Gson;
 import com.bukkit.mcteam.gson.GsonBuilder;
 
+import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -62,10 +69,11 @@ import me.taylorkelly.help.Help;
  * The data is saved to disk every 30min and on plugin disable.
  */
 public class Factions extends JavaPlugin {
-	// -------------------------------------------- //
-	// Fields
-	// -------------------------------------------- //
+
 	public static Factions instance;
+	private static iConomy iConomy = null;
+	
+	public boolean enabled = false;
 	
 	public final static Gson gson = new GsonBuilder()
 	.setPrettyPrinting()
@@ -76,7 +84,9 @@ public class Factions extends JavaPlugin {
 	private final FactionsPlayerListener playerListener = new FactionsPlayerListener();
 	private final FactionsEntityListener entityListener = new FactionsEntityListener();
 	private final FactionsBlockListener blockListener = new FactionsBlockListener();
-	
+	private final FactionsChunkListener chunkListener = new FactionsChunkListener();
+	private final FactionsIConomyListener iConomyListener = new FactionsIConomyListener();
+	public Integer givePlayersDaPowaReferenceInt = null;
 	public static PermissionHandler Permissions;
 	public static Help helpPlugin;
 
@@ -89,14 +99,28 @@ public class Factions extends JavaPlugin {
 		Factions.instance = this;
 	}
 	
+	public static iConomy getIConomy() 	{
+		return iConomy;
+	}
+	
+	public static boolean setIConomy(iConomy plugin) {
+		if (iConomy == null)
+			iConomy = plugin;
+		else
+			return false;
+		return true;
+	}
 	
 	@Override
 	public void onEnable() {
+		
+		
 		log("=== INIT START ===");
 		long timeInitStart = System.currentTimeMillis();
 		
 		// Add the commands
 		commands.add(new FCommandHelp());
+		commands.add(new FCommandAccess());
 		commands.add(new FCommandAdmin());
 		commands.add(new FCommandChat());
 		commands.add(new FCommandAllyChat());
@@ -152,17 +176,110 @@ public class Factions extends JavaPlugin {
 		pm.registerEvent(Event.Type.BLOCK_BREAK, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, this.blockListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CHUNK_LOAD, this.chunkListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CHUNK_UNLOAD, this.chunkListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLUGIN_ENABLE, this.iConomyListener, Event.Priority.Monitor,this);
+		
+		double redStoneRate = 0.005;
+		double diamondRate = 0.01;
+		double lapisRate = 0.01;
+		double goldRate = 0.025;
+		double ironRate = 0.10;
+		double clayRate = 0.05;
+		double coalRate = 0.30;
+		
+		FactionsBlockListener.WoodDropRates.put(Material.COAL, coalRate);
+		
+		FactionsBlockListener.StoneDropRates.put(Material.IRON_ORE, ironRate);
+		FactionsBlockListener.StoneDropRates.put(Material.COAL, coalRate);
+		
+		FactionsBlockListener.IronDropRates.put(Material.REDSTONE, redStoneRate);
+		FactionsBlockListener.IronDropRates.put(Material.DIAMOND, diamondRate);
+		FactionsBlockListener.IronDropRates.put(Material.INK_SACK, lapisRate);
+		FactionsBlockListener.IronDropRates.put(Material.GOLD_ORE, goldRate);
+		FactionsBlockListener.IronDropRates.put(Material.IRON_ORE, ironRate);
+		FactionsBlockListener.IronDropRates.put(Material.CLAY_BALL, clayRate);
+		FactionsBlockListener.IronDropRates.put(Material.COAL, coalRate);	
+		
+		FactionsBlockListener.GoldDropRates.put(Material.REDSTONE, redStoneRate);
+		FactionsBlockListener.GoldDropRates.put(Material.DIAMOND, diamondRate);
+		FactionsBlockListener.GoldDropRates.put(Material.INK_SACK, lapisRate);
+		//FactionsBlockListener.GoldDropRates.put(Material.GOLD_ORE, goldRate);
+		FactionsBlockListener.GoldDropRates.put(Material.IRON_ORE, ironRate);
+		//FactionsBlockListener.GoldDropRates.put(Material.CLAY_BALL, clayRate);
+		//FactionsBlockListener.GoldDropRates.put(Material.COAL, coalRate);	
+		
+		FactionsBlockListener.DiamondDropRates.put(Material.REDSTONE, redStoneRate);
+		FactionsBlockListener.DiamondDropRates.put(Material.DIAMOND, diamondRate);
+		FactionsBlockListener.DiamondDropRates.put(Material.INK_SACK, lapisRate);
+		FactionsBlockListener.DiamondDropRates.put(Material.GOLD_ORE, goldRate);
+		FactionsBlockListener.DiamondDropRates.put(Material.IRON_ORE, ironRate);
+		FactionsBlockListener.DiamondDropRates.put(Material.CLAY_BALL, clayRate);
+		FactionsBlockListener.DiamondDropRates.put(Material.COAL, coalRate);	
 		
 		// Register recurring tasks
 		long saveTicks = 20 * 60 * 30; // Approximately every 30 min
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(), saveTicks, saveTicks);
 		
+		if (givePlayersDaPowaReferenceInt == null) {
+			givePlayersDaPowaReferenceInt = getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+	            public void run() {
+	            	log("updating power.");
+	            	for (Player player : getServer().getOnlinePlayers()) {
+	            		FPlayer.get(player).updatePower();
+	            	}
+	              }
+	            }
+	        , 30 * 21L, 120 * 21L);
+		}
+		
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            public void run() {
+            	Random randomGenerator = new Random();
+            	for (Player player : getServer().getOnlinePlayers()) {
+            		World world = player.getWorld();
+            		
+            		int max = 120;
+            		
+            		int xOffset = randomGenerator.nextInt(max) - (max/2);
+            		int zOffset = randomGenerator.nextInt(max) - (max/2);
+            		
+            		Location l = player.getLocation().clone();
+            		l.setX(l.getX() + 10 + xOffset);
+            		l.setZ(l.getZ() + 10 + zOffset);
+            		l.setY(world.getHighestBlockYAt(l) - 1);
+            		
+            		Block bb = world.getBlockAt(l);
+            		
+            		TreeType type = TreeType.BIG_TREE; //TreeType.values()[randomGenerator.nextInt(TreeType.values().length)];            		
+            		
+            		boolean work = false;
+            		Material m = bb.getType();
+            		if (m == Material.DIRT || m == Material.GRASS)
+            		{
+            			l.setY(l.getY() + 1);
+            			work = player.getWorld().generateTree(l, type);
+            		}
+            		
+            		log("Super Tree Mode m:" +m+" w:" + work + " - " + l.getX() + ", " + l.getY() + ", " + l.getZ());
+            	}
+              }
+            }
+        , 10 * 21L, 30 * 21L);
+			
 		log("=== INIT DONE (Took "+(System.currentTimeMillis()-timeInitStart)+"ms) ===");
 	}
 
 	@Override
 	public void onDisable() {
+		
 		saveAll();
+		
+		if (givePlayersDaPowaReferenceInt != null) {
+			getServer().getScheduler().cancelTask(givePlayersDaPowaReferenceInt);
+			givePlayersDaPowaReferenceInt = null;
+		}
+		
 		log("Disabled");
 	}
 

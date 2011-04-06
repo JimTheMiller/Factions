@@ -1,8 +1,8 @@
 package com.bukkit.mcteam.factions.commands;
 
-import com.bukkit.mcteam.factions.Conf;
-import com.bukkit.mcteam.factions.Faction;
-import com.bukkit.mcteam.factions.struct.Role;
+//import com.bukkit.mcteam.factions.Conf;
+//import com.bukkit.mcteam.factions.Faction;
+//import com.bukkit.mcteam.factions.struct.Role;
 
 public class FCommandSethome extends FBaseCommand {
 	
@@ -13,6 +13,7 @@ public class FCommandSethome extends FBaseCommand {
 	}
 	
 	public void perform() {
+		/*
 		if ( ! assertHasFaction()) {
 			return;
 		}
@@ -33,6 +34,7 @@ public class FCommandSethome extends FBaseCommand {
 		
 		myFaction.sendMessage(me.getNameAndRelevant(myFaction)+Conf.colorSystem+" set the home for your faction. You can now use:");
 		myFaction.sendMessage(new FCommandHome().getUseageTemplate(true, true));
+		*/
 	}
 	
 }

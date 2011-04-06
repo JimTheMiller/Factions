@@ -46,6 +46,11 @@ public class FLocation {
 	// Getters and Setters
 	//----------------------------------------------//
 	
+	public double getCellSize()
+	{
+		return cellSize;
+	}
+	
 	public String getWorldName() {
 		return worldName;
 	}

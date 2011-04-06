@@ -5,7 +5,6 @@ import java.text.MessageFormat;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -20,21 +19,53 @@ import com.bukkit.mcteam.factions.Board;
 import com.bukkit.mcteam.factions.Conf;
 import com.bukkit.mcteam.factions.FLocation;
 import com.bukkit.mcteam.factions.FPlayer;
-import com.bukkit.mcteam.factions.Faction;
 import com.bukkit.mcteam.factions.struct.Relation;
 import com.bukkit.mcteam.util.EntityUtil;
+import com.nijiko.coelho.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.system.Account;
 
 public class FactionsEntityListener extends EntityListener {
 	
 	@Override
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity entity = event.getEntity();
-		if ( ! (entity instanceof Player)) {
+		if (!(entity instanceof Player)) {
 			return;
 		}
 	
 		Player player = (Player) entity;
 		FPlayer fplayer = FPlayer.get(player);
+
+		if (fplayer.getLastDamangedBy() instanceof Player) {
+			
+			Entity eld = fplayer.getLastDamangedBy();
+			if (eld != null) {
+				
+				FPlayer e = FPlayer.get((Player)eld);
+				
+				
+				
+				Account victimAccount = iConomy.getBank()
+					.getAccount(fplayer.getName());
+				
+				Account enemyAccount = iConomy.getBank()
+					.getAccount(e.getName());
+				
+				if (victimAccount.getBalance() > 0) {
+					double cost = victimAccount.getBalance() * 0.05;
+					victimAccount.subtract(cost);
+					enemyAccount.add(cost);
+					
+					player.getServer().broadcastMessage(ChatColor.DARK_GRAY + e.getName() + " stole $" + cost + " from " + fplayer.getName());
+				}
+				
+				if (fplayer.getPower() > 0) {
+					e.addPower(Conf.powerPerDeath);
+					e.sendMessage("You stole " + Conf.powerPerDeath + " power from " + fplayer.getName());
+				}
+			}
+		}
+		
 		fplayer.onDeath();
 		fplayer.sendMessage("Your power is now "+fplayer.getPowerRounded()+" / "+fplayer.getPowerMaxRounded());
 	}
@@ -53,13 +84,26 @@ public class FactionsEntityListener extends EntityListener {
 		
 		if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent sub = (EntityDamageByEntityEvent)event;
+                        
             if ( ! this.canDamagerHurtDamagee(sub)) {
     			event.setCancelled(true);
     		}
+            
+            if ((event.getEntity() instanceof Player)) {
+    			Player p = (Player)event.getEntity();
+    			FPlayer.get(p).setLastDamangedBy(sub.getDamager());
+    		}
+            
         } else if (event instanceof EntityDamageByProjectileEvent) {
         	EntityDamageByProjectileEvent sub = (EntityDamageByProjectileEvent)event;
+        	
             if ( ! this.canDamagerHurtDamagee(sub)) {
     			event.setCancelled(true);
+    		}
+            
+            if ((event.getEntity() instanceof Player)) {
+    			Player p = (Player)event.getEntity();
+    			FPlayer.get(p).setLastDamangedBy(sub.getDamager());
     		}
         }
 	}
@@ -73,6 +117,9 @@ public class FactionsEntityListener extends EntityListener {
 			return;
 		}
 		
+		if (event.getEntity() instanceof Creeper)
+			event.setCancelled(true);
+		/*
 		Faction faction = Board.getFactionAt(new FLocation(event.getLocation()));
 		
 		// Explosions may happen in the wilderness
@@ -86,7 +133,7 @@ public class FactionsEntityListener extends EntityListener {
 		} else if ((Conf.territoryBlockFireballs || faction.isSafeZone()) && event.getEntity() instanceof Fireball) {
 			// ghast fireball which might need prevention, if inside faction territory
 			event.setCancelled(true);
-		}
+		}*/
 	}
 
 	public boolean canDamagerHurtDamagee(EntityDamageByEntityEvent sub) {

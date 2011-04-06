@@ -29,7 +29,7 @@ public class FCommandClaim extends FBaseCommand {
 			return;
 		}
 		
-		if ( ! assertMinRole(Role.MODERATOR)) {
+		if (!assertMinRole(Role.MODERATOR)) {
 			return;
 		}
 		
@@ -49,6 +49,22 @@ public class FCommandClaim extends FBaseCommand {
 			return;
 		}
 		
+		/*
+		long worldX = flocation.getX() * (long)flocation.getCellSize();
+		long worldZ = flocation.getZ() * (long)flocation.getCellSize();
+		
+		Server server = Factions.instance.getServer();
+		Player player = server.getPlayer(me.getName());
+		World world = player.getWorld();
+		
+		for (int i = 0; i < 1; i++) {
+			world.getBlockAt((int)(worldX), 127 - i, (int)(worldZ)).setType(Material.GRAVEL);
+			world.getBlockAt((int)(worldX), 127 - i, (int)(worldZ + (long)flocation.getCellSize())).setType(Material.GRAVEL);
+			world.getBlockAt((int)(worldX + (long)flocation.getCellSize()), 127 - i, (int)worldZ).setType(Material.GRAVEL);
+			world.getBlockAt((int)(worldX + (long)flocation.getCellSize()), 127 - i, (int)(worldZ + (long)flocation.getCellSize())).setType(Material.GRAVEL);
+		}
+		*/
+		
 		if (otherFaction.isNone()) {
 			myFaction.sendMessage(me.getNameAndRelevant(myFaction)+Conf.colorSystem+" claimed some new land :D");
 		} else { //if (otherFaction.isNormal()) {
@@ -60,7 +76,7 @@ public class FCommandClaim extends FBaseCommand {
 			}
 			
 			int plotsAround = Board.numberSurroundingPlots(flocation);
-			if (plotsAround > 1) {
+			if (plotsAround > 2) {
 				sendMessage("There are still " + plotsAround + " surrounding plots.");
 				return;
 			}

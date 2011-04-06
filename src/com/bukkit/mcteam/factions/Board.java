@@ -5,26 +5,21 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.ChatColor;
 
-import com.bukkit.mcteam.factions.util.TextUtil;
 import com.bukkit.mcteam.factions.struct.Relation;
+import com.bukkit.mcteam.factions.util.TextUtil;
 import com.bukkit.mcteam.gson.reflect.TypeToken;
-import com.bukkit.mcteam.gson.JsonArray;
-import com.bukkit.mcteam.gson.JsonElement;
-import com.bukkit.mcteam.gson.JsonObject;
-import com.bukkit.mcteam.gson.JsonParser;
 import com.bukkit.mcteam.util.AsciiCompass;
 import com.bukkit.mcteam.util.DiscUtil;
 
 public class Board {
 	private static transient File file = new File(Factions.instance.getDataFolder(), "board.json");
-	private static transient HashMap<FLocation, Integer> flocationIds = new HashMap<FLocation, Integer>();
+	private static transient HashMap<FLocation, Claim> flocationIds = new HashMap<FLocation, Claim>();
 	
 	//----------------------------------------------//
 	// Get and Set
@@ -34,11 +29,16 @@ public class Board {
 			return 0;
 		}
 		
-		return flocationIds.get(flocation);
+		Claim c = flocationIds.get(flocation);
+		return c.factionId;
 	}
 	
 	public static Faction getFactionAt(FLocation flocation) {
 		return Faction.get(getIdAt(flocation));
+	}
+	
+	public static Claim getClaimAt(FLocation flocation) {
+		return flocationIds.get(flocation);
 	}
 	
 	public static void setIdAt(int id, FLocation flocation) {
@@ -46,7 +46,12 @@ public class Board {
 			removeAt(flocation);
 		}
 		
-		flocationIds.put(flocation, id);
+		flocationIds.put(flocation, new Claim(id, ClaimAccess.FACTION));
+	}
+	
+	public static void setAccessAt(FLocation flocation, ClaimAccess access) {
+		Claim claim = flocationIds.get(flocation);
+		claim.access = access;
 	}
 	
 	public static void setFactionAt(Faction faction, FLocation flocation) {
@@ -107,17 +112,16 @@ public class Board {
 		return orthogonallyOwned;
 	}
 	
-	
 	//----------------------------------------------//
 	// Cleaner. Remove orphaned foreign keys
 	//----------------------------------------------//
 	
 	public static void clean() {
-		Iterator<Entry<FLocation, Integer>> iter = flocationIds.entrySet().iterator();
+		Iterator<Entry<FLocation, Claim>> iter = flocationIds.entrySet().iterator();
 		while (iter.hasNext()) {
-			Entry<FLocation, Integer> entry = iter.next();
-			if ( ! Faction.exists(entry.getValue())) {
-				Factions.log("Board cleaner removed "+entry.getValue()+" from "+entry.getKey());
+			Entry<FLocation, Claim> entry = iter.next();
+			if (!Faction.exists(entry.getValue().factionId)) {
+				Factions.log("Board cleaner removed " + entry.getValue() + " from " + entry.getKey());
 				iter.remove();
 			}
 		}
@@ -129,8 +133,8 @@ public class Board {
 	
 	public static int getFactionCoordCount(int factionId) {
 		int ret = 0;
-		for (int thatFactionId : flocationIds.values()) {
-			if(thatFactionId == factionId) {
+		for (Claim thatClaim : flocationIds.values()) {
+			if(thatClaim.factionId == factionId) {
 				ret += 1;
 			}
 		}
@@ -199,34 +203,34 @@ public class Board {
 	// Persistance
 	// -------------------------------------------- //
 	
-	public static Map<String,Map<String,Integer>> dumpAsSaveFormat() {
-		Map<String,Map<String,Integer>> worldCoordIds = new HashMap<String,Map<String,Integer>>(); 
+	public static Map<String,Map<String,Claim>> dumpAsSaveFormat() {
+		Map<String,Map<String,Claim>> worldCoordIds = new HashMap<String,Map<String,Claim>>(); 
 		
-		for (Entry<FLocation, Integer> entry : flocationIds.entrySet()) {
+		for (Entry<FLocation, Claim> entry : flocationIds.entrySet()) {
 			String worldName = entry.getKey().getWorldName();
 			String coords = entry.getKey().getCoordString();
-			Integer id = entry.getValue();
+			Claim claim = entry.getValue();
 			if ( ! worldCoordIds.containsKey(worldName)) {
-				worldCoordIds.put(worldName, new TreeMap<String,Integer>());
+				worldCoordIds.put(worldName, new TreeMap<String, Claim>());
 			}
 			
-			worldCoordIds.get(worldName).put(coords, id);
+			worldCoordIds.get(worldName).put(coords, claim);
 		}
 		
 		return worldCoordIds;
 	}
 	
-	public static void loadFromSaveFormat(Map<String,Map<String,Integer>> worldCoordIds) {
+	public static void loadFromSaveFormat(Map<String,Map<String,Claim>> worldCoordIds) {
 		flocationIds.clear();
 		
-		for (Entry<String,Map<String,Integer>> entry : worldCoordIds.entrySet()) {
+		for (Entry<String,Map<String,Claim>> entry : worldCoordIds.entrySet()) {
 			String worldName = entry.getKey();
-			for (Entry<String,Integer> entry2 : entry.getValue().entrySet()) {
+			for (Entry<String, Claim> entry2 : entry.getValue().entrySet()) {
 				String[] coords = entry2.getKey().trim().split("[,\\s]+");
 				int x = Integer.parseInt(coords[0]);
 				int z = Integer.parseInt(coords[1]);
-				int factionId = entry2.getValue();
-				flocationIds.put(new FLocation(worldName, x, z), factionId);
+				Claim claim = entry2.getValue();
+				flocationIds.put(new FLocation(worldName, x, z), claim);
 			}
 		}
 	}
@@ -248,16 +252,17 @@ public class Board {
 	public static boolean load() {
 		Factions.log("Loading board from disk");
 		
+		/*
 		if ( ! file.exists()) {
 			if ( ! loadOld())
 				Factions.log("No board to load from disk. Creating new file.");
 			save();
 			return true;
-		}
+		}*/
 		
 		try {
-			Type type = new TypeToken<Map<String,Map<String,Integer>>>(){}.getType();
-			Map<String,Map<String,Integer>> worldCoordIds = Factions.gson.fromJson(DiscUtil.read(file), type);
+			Type type = new TypeToken<Map<String,Map<String,Claim>>>(){}.getType();
+			Map<String,Map<String,Claim>> worldCoordIds = Factions.gson.fromJson(DiscUtil.read(file), type);
 			loadFromSaveFormat(worldCoordIds);
 		} catch (IOException e) {
 			Factions.log("Failed to load the board from disk.");
@@ -267,7 +272,7 @@ public class Board {
 			
 		return true;
 	}
-
+/*
 	private static boolean loadOld() {
 		File folderBoard = new File(Factions.instance.getDataFolder(), "board");
 
@@ -300,8 +305,15 @@ public class Board {
 					JsonObject coord = coordDat.get(0).getAsJsonObject();
 					int coordX = coord.get("x").getAsInt();
 					int coordZ = coord.get("z").getAsInt();
-					int factionId = coordDat.get(1).getAsInt();
-					flocationIds.put(new FLocation(name, coordX, coordZ), factionId);
+					
+					parser.
+					
+					JsonObject claim = coordDat.get(1).
+					
+					int factionId = claim.get("factionId").getAsInt();
+					ClaimAccess access = claim.get("access").getAsInt();
+					
+					flocationIds.put(new FLocation(name, coordX, coordZ), new Claim(factionId, access));
 				}
 				Factions.log("loaded pre-1.1 board "+name);
 			} catch (Exception e) {
@@ -311,6 +323,8 @@ public class Board {
 		}
 		return true;
 	}
+	*/
+
 }
 
 
