@@ -124,11 +124,11 @@ public class FactionsPlayerListener extends PlayerListener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		FPlayer me = FPlayer.get(event.getPlayer());
 		
-		if (me.justRespawned)
+		/*if (me.justRespawned)
 		{
 			me.justRespawned = false;
 			event.getPlayer().kickPlayer("You were killed, rejoin.");
-		}
+		}*/
 		// Did we change coord?
 		FLocation from = me.getLastStoodAt();
 		FLocation to = new FLocation(event.getTo());
