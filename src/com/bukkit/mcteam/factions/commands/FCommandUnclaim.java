@@ -34,14 +34,9 @@ public class FCommandUnclaim extends FBaseCommand {
 			return;
 		}
 		
-		if ( ! assertMinRole(Role.MODERATOR)) {
-			return;
-		}
-		
 		Faction myFaction = me.getFaction();
 		
-		
-		if ( myFaction != otherFaction) {
+		if (myFaction != otherFaction) {
 			if ( ! otherFaction.hasLandInflation()) {
 				 // TODO more messages WARN current faction most importantly
 				sendMessage(me.getRelationColor(otherFaction)+otherFaction.getTag()+Conf.colorSystem+" owns this land and is strong enough to keep it.");
@@ -59,6 +54,10 @@ public class FCommandUnclaim extends FBaseCommand {
 			myFaction.sendMessage(me.getNameAndRelevant(myFaction)+Conf.colorSystem+" unclaimed some land from "+otherFaction.getTag(myFaction));
 			
 		} else {
+			
+			if ( ! assertMinRole(Role.MODERATOR)) {
+				return;
+			}
 			
 			Board.removeAt(flocation);
 
