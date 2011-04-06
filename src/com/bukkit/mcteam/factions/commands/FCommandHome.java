@@ -1,8 +1,10 @@
 package com.bukkit.mcteam.factions.commands;
 
-//import com.bukkit.mcteam.factions.Conf;
-//import com.bukkit.mcteam.factions.Faction;
-//import com.bukkit.mcteam.factions.struct.Role;
+import com.bukkit.mcteam.factions.Board;
+import com.bukkit.mcteam.factions.Conf;
+import com.bukkit.mcteam.factions.FLocation;
+import com.bukkit.mcteam.factions.Faction;
+import com.bukkit.mcteam.factions.struct.Role;
 
 public class FCommandHome extends FBaseCommand {
 	
@@ -13,7 +15,7 @@ public class FCommandHome extends FBaseCommand {
 	}
 	
 	public void perform() {
-		/*
+	
 		if ( ! assertHasFaction()) {
 			return;
 		}
@@ -31,7 +33,18 @@ public class FCommandHome extends FBaseCommand {
 			return;
 		}
 		
-		player.teleport(myFaction.getHome());*/
+		FLocation flocation = new FLocation(me);
+		Faction otherFaction = Board.getFactionAt(flocation);
+		if (otherFaction.isSafeZone()) {
+			FLocation homeLocation = new FLocation(myFaction.getHome());
+			if (Board.getFactionAt(homeLocation) == myFaction) {
+				player.teleport(myFaction.getHome());
+			} else {
+				me.sendMessage("Your home location is outside your base therefore you cant use it.");
+			}
+		} else {
+			me.sendMessage("You can only use home from spawn.");
+		}
 	}
 	
 }
