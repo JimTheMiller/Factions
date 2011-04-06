@@ -63,6 +63,8 @@ public class FactionsEntityListener extends EntityListener {
 					e.addPower(Conf.powerPerDeath);
 					e.sendMessage("You stole " + Conf.powerPerDeath + " power from " + fplayer.getName());
 				}
+				
+				fplayer.setLastDamangedBy(null);
 			}
 		}
 		

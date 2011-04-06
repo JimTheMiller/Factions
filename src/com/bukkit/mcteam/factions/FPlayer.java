@@ -601,7 +601,7 @@ public class FPlayer {
 
 	public void setLastDamangedBy(Entity damager) {
 		
-		if (damager instanceof Player)
+		if (damager != null && damager instanceof Player)
 			this.lastDamanger = ((Player)damager).getName();
 		else
 			this.lastDamanger = "";
