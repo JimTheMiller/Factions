@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -28,7 +29,14 @@ public class FactionsEntityListener extends EntityListener {
 	
 	@Override
 	public void onEntityDeath(EntityDeathEvent event) {
+		
 		Entity entity = event.getEntity();
+		
+		if (!(entity instanceof Monster)) {
+			event.getDrops().clear();
+			return;
+		}		
+		
 		if (!(entity instanceof Player)) {
 			return;
 		}
@@ -50,7 +58,8 @@ public class FactionsEntityListener extends EntityListener {
 					.getAccount(e.getName());
 				
 				if (victimAccount.getBalance() > 0) {
-					double cost = victimAccount.getBalance() * 0.05;
+					double cost = (int)(victimAccount.getBalance() * 0.05);
+					
 					victimAccount.subtract(cost);
 					enemyAccount.add(cost);
 					
