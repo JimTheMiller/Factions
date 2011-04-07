@@ -30,6 +30,8 @@ the shop will buy items at 40% of its sell price if it has less than 512.
 the shop will buy items at 20% of its sell price if it has less than 4,096.
 the shop will buy items at 10% of its sell price if it has less than 32,768.
 
+sell price is calculated as (money spent buying goods / number of goods) * margin
+
 /f buy price IronSword (shows current buy price for IronSword)
 /f sell price IronSword (shows current sell price for IrownSword)
 
@@ -42,14 +44,12 @@ the shop will buy items at 10% of its sell price if it has less than 32,768.
 /f sell (sells current item selected in hotbar)
 /f sell all (sells all of current item selected in hotbar)
 
-when you sell at shop, 0.5% of what you sell is added to your bounty.
-when you find diamonds money is added to your bounty.
-when you find tresure money is added to your bounty.
-when you unclaim other factions land money is added to your bounty based on the land value (50%) (taken from faction bank)
 
 --------------------------------------------
 
 MONEY/ FACTION TAX:
+
+Each faction has a bank account, presently this is used to purchase and pay for land.
 
 /f money add 1000 (adds money)
 /f money (shows balance)
@@ -64,6 +64,11 @@ Bounty:
 /f bounty (shows top 10 bounties)
 /f bounty bleevo 100 (adds 100 moonies to the bleevo bounty)
 
+
+when you sell at shop, 0.5% of what you sell is added to your bounty.
+when you find diamonds money is added to your bounty.
+when you find tresure money is added to your bounty.
+when you unclaim other factions land money is added to your bounty based on the land value (50%) (taken from faction bank)
 
 --------------------------------------------
 
@@ -123,3 +128,13 @@ On a certain night of the week players can pay an entry fee to join a tourney of
 - pvp
 - dig maze
 - pick a door (room with 10 doors only 9 dont kill you, then 8 and 7 etc.)
+
+--------------------------------------------
+
+CRAFTING BOXES LOL
+
+You cannot place crafting boxes, just try it.
+You cannot destroy crafting boxes, just try it.
+You cannot use crafting boxes of other factions, just try it.
+
+When you claim your first land a crafting box will be placed for you.
