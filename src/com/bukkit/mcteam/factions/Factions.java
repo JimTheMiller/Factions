@@ -5,15 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.TreeType;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,6 +22,7 @@ import com.bukkit.mcteam.factions.commands.FBaseCommand;
 import com.bukkit.mcteam.factions.commands.FCommandAccess;
 import com.bukkit.mcteam.factions.commands.FCommandAdmin;
 import com.bukkit.mcteam.factions.commands.FCommandAllyChat;
+import com.bukkit.mcteam.factions.commands.FCommandBuy;
 import com.bukkit.mcteam.factions.commands.FCommandChat;
 import com.bukkit.mcteam.factions.commands.FCommandClaim;
 import com.bukkit.mcteam.factions.commands.FCommandCreate;
@@ -122,6 +119,7 @@ public class Factions extends JavaPlugin {
 		commands.add(new FCommandHelp());
 		commands.add(new FCommandAccess());
 		commands.add(new FCommandAdmin());
+		commands.add(new FCommandBuy());
 		commands.add(new FCommandChat());
 		commands.add(new FCommandAllyChat());
 		commands.add(new FCommandClaim());
@@ -232,7 +230,7 @@ public class Factions extends JavaPlugin {
 	            }
 	        , 30 * 21L, 120 * 21L);
 		}
-		
+		/*
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
             	Random randomGenerator = new Random();
@@ -253,19 +251,16 @@ public class Factions extends JavaPlugin {
             		
             		TreeType type = TreeType.BIG_TREE; //TreeType.values()[randomGenerator.nextInt(TreeType.values().length)];            		
             		
-            		boolean work = false;
             		Material m = bb.getType();
             		if (m == Material.DIRT || m == Material.GRASS)
             		{
             			l.setY(l.getY() + 1);
-            			work = player.getWorld().generateTree(l, type);
+            			player.getWorld().generateTree(l, type);
             		}
-            		
-            		//log("Super Tree Mode m:" +m+" w:" + work + " - " + l.getX() + ", " + l.getY() + ", " + l.getZ());
             	}
               }
             }
-        , 240 * 21L, 240 * 21L);
+        , 240 * 21L, 240 * 21L); */
 			
 		log("=== INIT DONE (Took "+(System.currentTimeMillis()-timeInitStart)+"ms) ===");
 	}

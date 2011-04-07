@@ -1,0 +1,126 @@
+package com.bukkit.mcteam.factions.commands;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import com.bukkit.mcteam.factions.Board;
+import com.bukkit.mcteam.factions.FLocation;
+import com.bukkit.mcteam.factions.Faction;
+import com.nijiko.coelho.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.system.Account;
+
+public class FCommandBuy extends FBaseCommand  {
+	public FCommandBuy() {
+		aliases.add("buy");
+		aliases.add("b");
+		helpDescription = "*NEW* sell items in the safe zone.";
+	}
+	
+	public void perform() {
+		
+		FLocation flocation = new FLocation(me);
+		Faction faction = Board.getFactionAt(flocation);
+		
+		if (!faction.isSafeZone()) { 
+			me.sendMessage("[shop] You can only use shops in the safe zone.");
+			return;
+		}
+		
+		String command =  parameters.get(0);
+		
+		Material m = Material.matchMaterial(command);
+		
+		if (m != null) {
+
+			if (m == Material.SPONGE || m == Material.BEDROCK || m == Material.OBSIDIAN) {
+				me.sendMessage("[shop] nice try griefer");
+			}
+			
+			int n = 1;
+			
+			try
+			{
+				if (parameters.size() > 1)
+					n = Math.abs(Integer.parseInt(parameters.get(1)));
+			} catch (NumberFormatException ex) {
+			}
+			
+			double price = 10;
+			if (m == Material.TNT)
+				price = 100;
+			
+			Account account = iConomy.getBank()
+				.getAccount(me.getName());
+		
+			if (account.getBalance() < price * n)
+				n = (int)Math.round(account.getBalance() / price);
+			
+			account.subtract(n * price);
+			
+			while (n > 0)
+			{
+				int stackSize = n > 64 ? 64 : n;
+				
+				ItemStack s = new ItemStack(m, stackSize);
+				me
+				.getPlayer()
+				.getWorld()
+				.dropItem(me.getPlayer().getLocation(), s);
+				
+				n -= 64;
+			}
+
+		}  else if (command.equalsIgnoreCase("price") && parameters.size() > 1) {
+			Material priceM = Material.matchMaterial(parameters.get(1));
+			if (priceM != null) {
+
+				double price = 10;
+				if (m == Material.TNT)
+					price = 100;
+				
+				me.sendMessage("[shop] " + priceM.toString() + " costs " + price); 
+				
+				
+			} else {
+				me.sendMessage("[shop] No such product called " + parameters.get(1));
+			}
+			
+		} else if (command.equalsIgnoreCase("list")) {
+			
+			me.sendMessage("[shop] feature not done yet :D");
+			
+		} else {
+			me.sendMessage("[shop] No such product called " + command);
+		}
+			
+		
+		//Material m = Material.getMaterial(parameters.get(1));
+		
+		
+		
+		
+		
+		/*
+		if (command.equalsIgnoreCase("price"))
+			Price(ItemNameToId(parameters.get(1)));
+		else if (command.equalsIgnoreCase("list"))
+			List(ItemNameToId(parameters.get(1)));
+		else
+			Buy(ItemNameToId(parameters.get(1)));
+		*/
+		// buy price name
+		// buy list [page]
+		// buy item [number]
+	}
+	
+	/*
+	private void Price(Material material) {
+	}
+	
+	private void List(int page) {
+	}
+	
+	private void Buy(Material material, int page) { 
+	}*/
+	
+}
