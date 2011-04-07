@@ -261,11 +261,11 @@ public class Factions extends JavaPlugin {
             			work = player.getWorld().generateTree(l, type);
             		}
             		
-            		log("Super Tree Mode m:" +m+" w:" + work + " - " + l.getX() + ", " + l.getY() + ", " + l.getZ());
+            		//log("Super Tree Mode m:" +m+" w:" + work + " - " + l.getX() + ", " + l.getY() + ", " + l.getZ());
             	}
               }
             }
-        , 10 * 21L, 30 * 21L);
+        , 240 * 21L, 240 * 21L);
 			
 		log("=== INIT DONE (Took "+(System.currentTimeMillis()-timeInitStart)+"ms) ===");
 	}
