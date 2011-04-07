@@ -6,7 +6,6 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-//import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,7 +13,6 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 import com.bukkit.mcteam.factions.Board;
 import com.bukkit.mcteam.factions.Claim;
@@ -70,10 +68,7 @@ public class FactionsBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 		
-		
-		
 		if (event.getBlock().getType() == Material.STONE) {
-			
 			
 			Material tool = event.getPlayer().getItemInHand().getType();
 
@@ -147,14 +142,12 @@ public class FactionsBlockListener extends BlockListener {
 						//TODO add bounty
 						event.getPlayer().getServer().broadcastMessage(ChatColor.YELLOW + event.getPlayer().getName() + " found a diamond.");
 					}
+
+					ItemStack stack = new ItemStack(item, 1);
+					event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
 					
-					if (item == Material.INK_SACK) {
-						ItemStack stack = new MaterialData(Material.INK_SACK, (byte)1).toItemStack(); 
-						event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
-					} else {
-						ItemStack stack = new ItemStack(item, 1);
-						event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
-					}
+					event.getBlock().setType(Material.AIR);
+					event.setCancelled(true);
 				}
 			}
 		}
