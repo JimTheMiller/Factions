@@ -3,6 +3,7 @@ package com.bukkit.mcteam.factions.listeners;
 import java.text.MessageFormat;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -32,7 +33,7 @@ public class FactionsEntityListener extends EntityListener {
 		
 		Entity entity = event.getEntity();
 		
-		if (!(entity instanceof Monster)) {
+		if (entity instanceof Monster) {
 			event.getDrops().clear();
 			return;
 		}		
