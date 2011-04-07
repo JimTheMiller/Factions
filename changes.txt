@@ -1,5 +1,8 @@
 PLANNED FEATURES.
 
+BUGS
+- can kill people outside safe zone while being in safe zone.
+
 LAND TAX
 charge land tax to factions every hour.
 if a faction cannot pay its land tax its power is reduced by n where n is the amount of plots it cant pay its taxes for.
