@@ -1,0 +1,125 @@
+PLANNED FEATURES.
+
+LAND TAX
+charge land tax to factions every hour.
+if a faction cannot pay its land tax its power is reduced by n where n is the amount of plots it cant pay its taxes for.
+
+(money collected goes to the shop bank account)
+
+
+make claims cost money.
+- cost increases if faction has 1 claim and its not connected to one.
+- cost increases as it moves away from "spawn"
+
+--------------------------------------------
+
+
+MAP make the map use a ticker to send the maps to players at a regular interval rather when they move.
+MAP change map size too wide.
+
+
+--------------------------------------------
+
+SHOPPING:
+
+(shop will have its bank seeded, if it less than 20% of the value of goods cannot buy goods)
+(sell margins will increase from 20% to 50% when the amount of money on hand is less than 20% of the value of goods)
+
+the shop will buy items at 80% of its sell price if it has less than 64.
+the shop will buy items at 40% of its sell price if it has less than 512.
+the shop will buy items at 20% of its sell price if it has less than 4,096.
+the shop will buy items at 10% of its sell price if it has less than 32,768.
+
+/f buy price IronSword (shows current buy price for IronSword)
+/f sell price IronSword (shows current sell price for IrownSword)
+
+/f buy list [n] (n is page)
+/f sell list [n] (n is page)
+/f buy IronSword [1] (defaults to 1)
+
+/f sell IronSword [2] (defaults to 1)
+/f sell IronSword all (sell all)
+/f sell (sells current item selected in hotbar)
+/f sell all (sells all of current item selected in hotbar)
+
+when you sell at shop, 0.5% of what you sell is added to your bounty.
+when you find diamonds money is added to your bounty.
+when you find tresure money is added to your bounty.
+when you unclaim other factions land money is added to your bounty based on the land value (50%) (taken from faction bank)
+
+--------------------------------------------
+
+MONEY/ FACTION TAX:
+
+/f money add 1000 (adds money)
+/f money (shows balance)
+/f money top (shows money by contributor)
+
+/f set-tax 100 
+
+
+--------------------------------------------
+
+Bounty:
+/f bounty (shows top 10 bounties)
+/f bounty bleevo 100 (adds 100 moonies to the bleevo bounty)
+
+
+--------------------------------------------
+
+DEATH:
+When a player kills another player the killer gets
+- the bounty if any the victim has on their head.
+- the contents of their inventory.
+- 5% of their bank account.
+- 5% of the victims bank account is also added to a bounty to the killer.
+- 1 of their factions power.
+
+
+--------------------------------------------
+
+New Players/Factions:
+
+New players/factions should be given a chance to play without being instantly killed.
+Faction cannot gain or lose power for 1 day.
+Players cannot be killed for 1 hr after they join/create their first faction.
+
+--------------------------------------------
+
+Income: How do players make money?
+
+Killing other players.
+Selling items at shops.
+Killing NPC's
+
+--------------------------------------------
+
+CRAFTING TAX:
+
+When a player crafts an item, they auto pay a tax. Default tax with per item overrides.
+
+--------------------------------------------
+
+WORLD EVENTS:
+
+When a certain amount of people are on the server world events have a random chance of happening.
+
+Chest spawn. 
+
+A chest spawns surrounded in a hard to remove material, the location of the chest is broadcasted to all players
+to avoid x-ray/hackers having an unfair advantage.
+
+Meteorite.
+
+A ball of minerals will fall to the map and create a huge creator and light anything flammable around it on fire.
+The location is random so it can cause damage and loss of chests to players.
+it is made of gold/diamond/iron mostly with a lava core.
+
+Games night.
+
+On a certain night of the week players can pay an entry fee to join a tourney of mini games.
+- lava jump
+- fire max
+- pvp
+- dig maze
+- pick a door (room with 10 doors only 9 dont kill you, then 8 and 7 etc.)
