@@ -1,5 +1,8 @@
 package com.bukkit.mcteam.factions.commands;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,6 +13,7 @@ import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.coelho.iConomy.system.Account;
 
 public class FCommandBuy extends FBaseCommand  {
+	
 	public FCommandBuy() {
 		aliases.add("buy");
 		aliases.add("b");
@@ -17,6 +21,35 @@ public class FCommandBuy extends FBaseCommand  {
 	}
 	
 	public void perform() {
+		
+		Map<Material, Double> prices = new HashMap<Material, Double>();
+		
+		prices.put(Material.TNT, 50.0);
+		
+		/*prices.put(Material.WATER, 100.0);
+		prices.put(Material.STATIONARY_WATER, 100.0);
+		
+		prices.put(Material.LAVA, 100.0);
+		prices.put(Material.STATIONARY_LAVA, 100.0);
+		
+		prices.put(Material.GOLD_BLOCK, 9000.0);
+		
+		prices.put(Material.IRON_INGOT, 100.0);
+		prices.put(Material.IRON_ORE, 100.0);
+		prices.put(Material.IRON_BLOCK, 900.0);
+		
+		prices.put(Material.GOLDEN_APPLE, -1.0);
+		
+		prices.put(Material.SPONGE, -1.0);
+		
+		prices.put(Material.OBSIDIAN, -1.0);
+		prices.put(Material.TNT, -1.0);
+		
+		prices.put(Material.GOLD_ORE, 1000.0);
+		prices.put(Material.GOLD_PICKAXE, 3000.0);
+		prices.put(Material.GOLD_INGOT, 1000.0);
+		*/
+		
 		
 		FLocation flocation = new FLocation(me);
 		Faction faction = Board.getFactionAt(flocation);
@@ -31,11 +64,6 @@ public class FCommandBuy extends FBaseCommand  {
 		Material m = Material.matchMaterial(command);
 		
 		if (m != null) {
-
-			if (m == Material.SPONGE || m == Material.BEDROCK || m == Material.OBSIDIAN) {
-				me.sendMessage("[shop] nice try griefer");
-			}
-			
 			int n = 1;
 			
 			try
@@ -46,8 +74,16 @@ public class FCommandBuy extends FBaseCommand  {
 			}
 			
 			double price = 10;
-			if (m == Material.TNT)
-				price = 100;
+			
+			if (prices.containsKey(m)) {
+				price = prices.get(m);
+			} else {
+				return;
+			}
+				
+
+			if (price == -1)
+				return;
 			
 			Account account = iConomy.getBank()
 				.getAccount(me.getName());
@@ -55,7 +91,12 @@ public class FCommandBuy extends FBaseCommand  {
 			if (account.getBalance() < price * n)
 				n = (int)Math.round(account.getBalance() / price);
 			
-			account.subtract(n * price);
+			double total = n * price;
+			account.subtract(total);
+			
+			me.getPlayer()
+				.getServer()
+				.broadcastMessage(me.getName() + " bought " + n + " " + m.name() + " for " + total);
 			
 			while (n > 0)
 			{
