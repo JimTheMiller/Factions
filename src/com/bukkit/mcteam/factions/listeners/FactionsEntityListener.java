@@ -3,8 +3,8 @@ package com.bukkit.mcteam.factions.listeners;
 import java.text.MessageFormat;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -42,8 +42,6 @@ public class FactionsEntityListener extends EntityListener {
 			if (eld != null) {
 				
 				FPlayer e = FPlayer.get((Player)eld);
-				
-				
 				
 				Account victimAccount = iConomy.getBank()
 					.getAccount(fplayer.getName());
@@ -119,7 +117,7 @@ public class FactionsEntityListener extends EntityListener {
 			return;
 		}
 		
-		if (event.getEntity() instanceof Creeper)
+		if (event.getEntity() instanceof LivingEntity)
 			event.setCancelled(true);
 		/*
 		Faction faction = Board.getFactionAt(new FLocation(event.getLocation()));
