@@ -24,7 +24,8 @@ public class FCommandBuy extends FBaseCommand  {
 		
 		Map<Material, Double> prices = new HashMap<Material, Double>();
 		
-		prices.put(Material.TNT, 50.0);
+		prices.put(Material.TNT, 100.0);
+		prices.put(Material.STRING, 59.99);
 		
 		/*prices.put(Material.WATER, 100.0);
 		prices.put(Material.STATIONARY_WATER, 100.0);
