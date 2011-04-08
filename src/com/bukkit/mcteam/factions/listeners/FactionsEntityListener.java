@@ -3,7 +3,6 @@ package com.bukkit.mcteam.factions.listeners;
 import java.text.MessageFormat;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -23,8 +22,8 @@ import com.bukkit.mcteam.factions.FLocation;
 import com.bukkit.mcteam.factions.FPlayer;
 import com.bukkit.mcteam.factions.struct.Relation;
 import com.bukkit.mcteam.util.EntityUtil;
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.coelho.iConomy.system.Account;
+//import com.nijiko.coelho.iConomy.iConomy;
+//import com.nijiko.coelho.iConomy.system.Account;
 
 public class FactionsEntityListener extends EntityListener {
 	
@@ -45,13 +44,14 @@ public class FactionsEntityListener extends EntityListener {
 		Player player = (Player) entity;
 		FPlayer fplayer = FPlayer.get(player);
 
+		
 		if (fplayer.getLastDamangedBy() instanceof Player) {
 			
 			Entity eld = fplayer.getLastDamangedBy();
 			if (eld != null) {
 				
 				FPlayer e = FPlayer.get((Player)eld);
-				
+				/*
 				Account victimAccount = iConomy.getBank()
 					.getAccount(fplayer.getName());
 				
@@ -66,13 +66,13 @@ public class FactionsEntityListener extends EntityListener {
 					
 					player.getServer().broadcastMessage(ChatColor.DARK_GRAY + e.getName() + " stole $" + cost + " from " + fplayer.getName());
 				}
-				
+				*/
 				if (fplayer.getPower() > 0) {
 					e.addPower(Conf.powerPerDeath);
 					e.sendMessage("You stole " + Conf.powerPerDeath + " power from " + fplayer.getName());
 				}
 				
-				fplayer.setLastDamangedBy(null);
+				
 			}
 		}
 		
@@ -186,11 +186,12 @@ public class FactionsEntityListener extends EntityListener {
 		}
 		
 		// You can not hurt neutrals in their own territory.
+		/*
 		if (relation == Relation.NEUTRAL && defender.isInOwnTerritory()) {
 			attacker.sendMessage(Conf.colorSystem+"You can't hurt "+relation.getColor()+defender.getNameAndRelevant(attacker)+Conf.colorSystem+" in their own territory.");
 			defender.sendMessage(attacker.getNameAndRelevant(defender)+Conf.colorSystem+" tried to hurt you.");
 			return false;
-		}
+		}*/
 		
 		// Damage will be dealt. However check if the damage should be reduced.
 		if (defender.isInOwnTerritory() && Conf.territoryShieldFactor > 0) {
