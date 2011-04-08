@@ -22,7 +22,7 @@ public class FCommandBounty extends FBaseCommand {
 		if (parameters.size() == 0)
 			showList();
 
-		if (parameters.size() == 2) 
+		if (parameters.size() > 1) 
 			addBounty();
 	}
 	
@@ -60,6 +60,14 @@ public class FCommandBounty extends FBaseCommand {
 					+ ChatColor.GREEN + " does not exist.");
 			return;
 		}
+		
+		if (parameters.size() == 1) {
+			me.sendMessage(ChatColor.GREEN + "[bounty] " 
+					+ ChatColor.WHITE + playerName  
+					+ ChatColor.GREEN + iConomy.getBank().format(target.getBounty()));
+			return;
+		}
+			
 		
 		int amount = 0;
 		try
