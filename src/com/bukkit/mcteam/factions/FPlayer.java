@@ -49,6 +49,7 @@ public class FPlayer {
 	private boolean allyChatting;
 	public boolean justRespawned;
 	private String lastDamanger;
+	public double bounty;
 	
 	// -------------------------------------------- //
 	// Construct
@@ -73,6 +74,18 @@ public class FPlayer {
 	// -------------------------------------------- //
 	// Minecraft Player
 	// -------------------------------------------- //
+	
+	public double getBounty() {
+		return this.bounty;
+	}
+	
+	public void setBounty(double bounty) { 
+		this.bounty = bounty;
+	}
+	
+	public void addBounty(double bounty) {
+		this.bounty += bounty;
+	}
 	
 	public Player getPlayer() {
 		return Factions.instance.getServer().getPlayer(playerName);

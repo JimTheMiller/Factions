@@ -244,9 +244,9 @@ public class FactionsPlayerListener extends PlayerListener {
 
 	@Override
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		
 		Player player = event.getPlayer();
 		FPlayer me = FPlayer.get(player);
+		me.setLastDamangedBy(null);
 		me.justRespawned = true;
 		Location home = me.getFaction().getHome();
 		if (Conf.homesEnabled && Conf.homesTeleportToOnDeath && home != null) {

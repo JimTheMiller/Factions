@@ -22,6 +22,7 @@ import com.bukkit.mcteam.factions.commands.FBaseCommand;
 import com.bukkit.mcteam.factions.commands.FCommandAccess;
 import com.bukkit.mcteam.factions.commands.FCommandAdmin;
 import com.bukkit.mcteam.factions.commands.FCommandAllyChat;
+import com.bukkit.mcteam.factions.commands.FCommandBounty;
 import com.bukkit.mcteam.factions.commands.FCommandBuy;
 import com.bukkit.mcteam.factions.commands.FCommandChat;
 import com.bukkit.mcteam.factions.commands.FCommandClaim;
@@ -48,6 +49,7 @@ import com.bukkit.mcteam.factions.commands.FCommandTag;
 import com.bukkit.mcteam.factions.commands.FCommandTitle;
 import com.bukkit.mcteam.factions.commands.FCommandUnclaim;
 import com.bukkit.mcteam.factions.commands.FCommandVersion;
+import com.bukkit.mcteam.factions.listeners.FBountyEntityListener;
 import com.bukkit.mcteam.factions.listeners.FactionsBlockListener;
 import com.bukkit.mcteam.factions.listeners.FactionsChunkListener;
 import com.bukkit.mcteam.factions.listeners.FactionsEntityListener;
@@ -120,6 +122,7 @@ public class Factions extends JavaPlugin {
 		commands.add(new FCommandAccess());
 		commands.add(new FCommandAdmin());
 		commands.add(new FCommandBuy());
+		commands.add(new FCommandBounty());
 		commands.add(new FCommandChat());
 		commands.add(new FCommandAllyChat());
 		commands.add(new FCommandClaim());
@@ -177,6 +180,8 @@ public class Factions extends JavaPlugin {
 		pm.registerEvent(Event.Type.CHUNK_LOAD, this.chunkListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CHUNK_UNLOAD, this.chunkListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLUGIN_ENABLE, this.iConomyListener, Event.Priority.Monitor,this);
+		
+		pm.registerEvent(Event.Type.ENTITY_DEATH, new FBountyEntityListener(), Event.Priority.Normal, this);
 		
 		double redStoneRate = 0.005;
 		double diamondRate = 0.01;
