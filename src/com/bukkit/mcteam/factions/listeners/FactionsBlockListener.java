@@ -148,7 +148,7 @@ public class FactionsBlockListener extends BlockListener {
 						fp.addBounty(diamondBounty);
 						event.getPlayer().getServer().broadcastMessage(
 								ChatColor.GREEN + "[bounty] " 
-								+ ChatColor.WHITE + event.getPlayer() 
+								+ ChatColor.WHITE + event.getPlayer().getName()
 								+ ChatColor.GREEN + " attracted bounty of " + iConomy.getBank().format(diamondBounty) + " because of the diamond curse. ");
 					}
 
