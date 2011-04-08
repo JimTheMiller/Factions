@@ -14,7 +14,7 @@ public class FCommandBounty extends FBaseCommand {
 	
 	public FCommandBounty() {
 		aliases.add("bounty");
-		helpDescription = "*NEW* Bounty";
+		helpDescription = "*NEW* /f bounty [name] [amount]";
 	}
 	
 	public void perform() {
@@ -36,9 +36,9 @@ public class FCommandBounty extends FBaseCommand {
 		for (int i = 0; i < (players.size() >= 10 ? 10 : players.size()); i++) {
 			FPlayer target = players.get(i);
 			me.sendMessage(
-					ChatColor.GREEN + "[bounty] " + i + ". " 
+					ChatColor.GREEN + "[bounty] " + (i+1) + ". " 
 					+ ChatColor.WHITE + target.getName() 
-					+ ChatColor.GREEN + iConomy.getBank().format(target.getBounty()));
+					+ ChatColor.GREEN + " " + iConomy.getBank().format(target.getBounty()));
 			
 		}
 		} catch (Exception ex) 		{
