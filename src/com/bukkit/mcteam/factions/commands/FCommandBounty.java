@@ -33,9 +33,12 @@ public class FCommandBounty extends FBaseCommand {
 		List<FPlayer> players = new ArrayList<FPlayer>(FPlayer.getAllOnline());
 		Collections.sort(players, new FPlayerBountyComparator());
 		
+		me.sendMessage(ChatColor.GREEN + "[bounty] TOP 10");
 		for (int i = 0; i < (players.size() >= 10 ? 10 : players.size()); i++) {
 			FPlayer target = players.get(i);
-			me.sendMessage(
+			
+			if (target.getBounty() > 0)
+				me.sendMessage(
 					ChatColor.GREEN + "[bounty] " + (i+1) + ". " 
 					+ ChatColor.WHITE + target.getName() 
 					+ ChatColor.GREEN + " " + iConomy.getBank().format(target.getBounty()));

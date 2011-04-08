@@ -20,6 +20,7 @@ import com.bukkit.mcteam.factions.FLocation;
 import com.bukkit.mcteam.factions.FPlayer;
 import com.bukkit.mcteam.factions.Faction;
 import com.bukkit.mcteam.factions.Factions;
+import com.nijiko.coelho.iConomy.iConomy;
 
 public class FactionsBlockListener extends BlockListener {
 	
@@ -140,8 +141,15 @@ public class FactionsBlockListener extends BlockListener {
 				if (item != null)
 				{
 					if (item == Material.DIAMOND) {
-						//TODO add bounty
 						event.getPlayer().getServer().broadcastMessage(ChatColor.YELLOW + event.getPlayer().getName() + " found a diamond.");
+						
+						double diamondBounty = 50;
+						FPlayer fp = FPlayer.get(event.getPlayer());
+						fp.addBounty(diamondBounty);
+						event.getPlayer().getServer().broadcastMessage(
+								ChatColor.GREEN + "[bounty] " 
+								+ ChatColor.WHITE + event.getPlayer() 
+								+ ChatColor.GREEN + " attracted bounty of " + iConomy.getBank().format(diamondBounty) + " because of the diamond curse. ");
 					}
 
 					ItemStack stack = new ItemStack(item, 1);
