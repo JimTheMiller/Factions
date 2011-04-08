@@ -66,6 +66,7 @@ public class FactionsBlockListener extends BlockListener {
 
 		if ( ! this.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock(), "destroy")) {
 			event.setCancelled(true);
+			return;
 		}
 		
 		if (event.getBlock().getType() == Material.STONE) {
