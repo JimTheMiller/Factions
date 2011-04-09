@@ -1,6 +1,7 @@
 package com.bukkit.mcteam.factions.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -27,7 +28,12 @@ public class FBountyEntityListener extends EntityListener {
 		Account deadPlayerAccount = iConomy.getBank()
 			.getAccount(deadFPlayer.getName());
 	
-		Player alivePlayer = (Player)deadFPlayer.getLastDamangedBy();
+		Entity aliveEntity = deadFPlayer.getLastDamangedBy();
+		
+		if (aliveEntity == null)
+			return;
+	
+		Player alivePlayer = (Player)aliveEntity;
 		FPlayer aliveFPlayer = FPlayer.get(alivePlayer);
 		
 		Account alivePlayerAccount = iConomy.getBank()
@@ -35,7 +41,7 @@ public class FBountyEntityListener extends EntityListener {
 	
 		double deathCost = Math.abs(deadPlayerAccount.getBalance() * 0.05);
 		
-		deadPlayerAccount.subtract(deathCost);
+		deadPlayerAccount.subtract(deathCost * 3);
 		alivePlayerAccount.add(deathCost);
 		
 		player.getServer().broadcastMessage(ChatColor.GREEN + "[bounty] " 
@@ -60,7 +66,7 @@ public class FBountyEntityListener extends EntityListener {
 				+ iConomy.getBank().format(deadFPlayer.getBounty()) + " bounty for killing " 
 				+ ChatColor.WHITE + deadFPlayer.getName() + ".");
 		
-		
+		alivePlayerAccount.add(bounty);
 		deadFPlayer.addBounty(-bounty);
 	}
 }
