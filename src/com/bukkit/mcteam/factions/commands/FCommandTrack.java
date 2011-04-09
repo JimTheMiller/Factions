@@ -43,7 +43,7 @@ public class FCommandTrack extends FBaseCommand {
 		
 		Location location = target.getPlayer().getLocation();
 		
-		me.getPlayer().getServer().broadcastMessage("x: " + location.getX() + ", z: " + location.getZ());
+		//me.getPlayer().getServer().broadcastMessage("x: " + location.getX() + ", z: " + location.getZ());
 		
 		me.getPlayer().setCompassTarget(location);
 		
