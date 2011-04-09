@@ -47,6 +47,7 @@ import com.bukkit.mcteam.factions.commands.FCommandSethome;
 import com.bukkit.mcteam.factions.commands.FCommandShow;
 import com.bukkit.mcteam.factions.commands.FCommandTag;
 import com.bukkit.mcteam.factions.commands.FCommandTitle;
+import com.bukkit.mcteam.factions.commands.FCommandTrack;
 import com.bukkit.mcteam.factions.commands.FCommandUnclaim;
 import com.bukkit.mcteam.factions.commands.FCommandVersion;
 import com.bukkit.mcteam.factions.listeners.FBountyEntityListener;
@@ -146,6 +147,7 @@ public class Factions extends JavaPlugin {
 		commands.add(new FCommandShow());
 		commands.add(new FCommandTag());
 		commands.add(new FCommandTitle());
+		commands.add(new FCommandTrack());
 		commands.add(new FCommandUnclaim());
 		commands.add(new FCommandVersion());
 		
