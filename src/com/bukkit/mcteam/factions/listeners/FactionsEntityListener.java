@@ -88,6 +88,7 @@ public class FactionsEntityListener extends EntityListener {
 	 */
 	@Override
 	public void onEntityDamage(EntityDamageEvent event) {
+		
 		if ( event.isCancelled()) {
 			return;
 		}
@@ -97,6 +98,7 @@ public class FactionsEntityListener extends EntityListener {
                         
             if ( ! this.canDamagerHurtDamagee(sub)) {
     			event.setCancelled(true);
+    			return;
     		}
             
             if ((event.getEntity() instanceof Player)) {
