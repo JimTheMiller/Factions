@@ -55,6 +55,9 @@ public class FCommandHelp extends FBaseCommand {
 		pageLines.add( new FCommandHelp().getUseageTemplate(true, true) );
 		pageLines.add( new FCommandAccess().getUseageTemplate(true, true) );
 		pageLines.add( new FCommandAllyChat().getUseageTemplate(true, true) );
+		pageLines.add( new FCommandTrack().getUseageTemplate(true, true) );
+		pageLines.add( new FCommandBuy().getUseageTemplate(true, true) );
+		pageLines.add( new FCommandBounty().getUseageTemplate(true, true) );
 		helpPages.add(pageLines);
 		
 		pageLines = new ArrayList<String>();
