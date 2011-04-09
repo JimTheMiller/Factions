@@ -33,8 +33,8 @@ public class FBountyEntityListener extends EntityListener {
 		Account alivePlayerAccount = iConomy.getBank()
 			.getAccount(aliveFPlayer.getName());
 	
-		double deathCost = deadPlayerAccount.getBalance() * 0.05;
-
+		double deathCost = Math.abs(deadPlayerAccount.getBalance() * 0.05);
+		
 		deadPlayerAccount.subtract(deathCost);
 		alivePlayerAccount.add(deathCost);
 		
