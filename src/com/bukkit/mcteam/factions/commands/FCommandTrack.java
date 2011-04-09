@@ -52,6 +52,10 @@ public class FCommandTrack extends FBaseCommand {
 				+ ChatColor.GREEN + " location.");
 		me.sendMessage(ChatColor.GREEN + "[track] x: " + (int)location.getX() + ", z: " + (int)location.getZ());
 		me.sendMessage(ChatColor.GREEN + "[track] compasses are broken in 1.4 (you can still use 1.3 on this server)");
+		
+		me.getPlayer().getServer().broadcastMessage(ChatColor.GREEN + "[track] " 
+				+ ChatColor.WHITE + me.getName()
+				+ ChatColor.GREEN + " has started tracking their target.");
 	}
 	
 }
