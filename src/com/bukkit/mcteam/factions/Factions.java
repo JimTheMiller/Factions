@@ -185,7 +185,7 @@ public class Factions extends JavaPlugin {
 		
 		double redStoneRate = 0.005;
 		double diamondRate = 0.01;
-		double lapisRate = 0.01;
+		//double lapisRate = 0.01;
 		double goldRate = 0.025;
 		double ironRate = 0.10;
 		double clayRate = 0.05;
@@ -198,7 +198,7 @@ public class Factions extends JavaPlugin {
 		
 		FactionsBlockListener.IronDropRates.put(Material.REDSTONE, redStoneRate);
 		FactionsBlockListener.IronDropRates.put(Material.DIAMOND, diamondRate);
-		FactionsBlockListener.IronDropRates.put(Material.INK_SACK, lapisRate);
+		//FactionsBlockListener.IronDropRates.put(Material.INK_SACK, lapisRate);
 		FactionsBlockListener.IronDropRates.put(Material.GOLD_ORE, goldRate);
 		FactionsBlockListener.IronDropRates.put(Material.IRON_ORE, ironRate);
 		FactionsBlockListener.IronDropRates.put(Material.CLAY_BALL, clayRate);
@@ -206,7 +206,7 @@ public class Factions extends JavaPlugin {
 		
 		FactionsBlockListener.GoldDropRates.put(Material.REDSTONE, redStoneRate);
 		FactionsBlockListener.GoldDropRates.put(Material.DIAMOND, diamondRate);
-		FactionsBlockListener.GoldDropRates.put(Material.INK_SACK, lapisRate);
+		//FactionsBlockListener.GoldDropRates.put(Material.INK_SACK, lapisRate);
 		//FactionsBlockListener.GoldDropRates.put(Material.GOLD_ORE, goldRate);
 		FactionsBlockListener.GoldDropRates.put(Material.IRON_ORE, ironRate);
 		//FactionsBlockListener.GoldDropRates.put(Material.CLAY_BALL, clayRate);
@@ -214,7 +214,7 @@ public class Factions extends JavaPlugin {
 		
 		FactionsBlockListener.DiamondDropRates.put(Material.REDSTONE, redStoneRate);
 		FactionsBlockListener.DiamondDropRates.put(Material.DIAMOND, diamondRate);
-		FactionsBlockListener.DiamondDropRates.put(Material.INK_SACK, lapisRate);
+		//FactionsBlockListener.DiamondDropRates.put(Material.INK_SACK, lapisRate);
 		FactionsBlockListener.DiamondDropRates.put(Material.GOLD_ORE, goldRate);
 		FactionsBlockListener.DiamondDropRates.put(Material.IRON_ORE, ironRate);
 		FactionsBlockListener.DiamondDropRates.put(Material.CLAY_BALL, clayRate);
