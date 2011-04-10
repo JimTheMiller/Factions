@@ -171,6 +171,7 @@ public class Factions extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener, Event.Priority.High, this);
 		pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, this.playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DEATH, this.entityListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_EXPLODE, this.entityListener, Event.Priority.Normal, this);
@@ -410,5 +411,17 @@ public class Factions extends JavaPlugin {
 		Board.save();
 		Conf.save();
 	}
-
+	
+	public int startLogOffTimer (String playerName) {
+		final String pName = new String(playerName);
+		if (givePlayersDaPowaReferenceInt != null) {
+			return getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+	            public void run() {
+	            	FPlayer.playerRanFromBattle(pName);
+	              }
+	            }
+	        , 20 * 15L);
+		};
+		return 0;
+	}
 }

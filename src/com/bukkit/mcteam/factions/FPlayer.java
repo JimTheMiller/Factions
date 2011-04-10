@@ -49,6 +49,7 @@ public class FPlayer {
 	private boolean allyChatting;
 	public boolean justRespawned;
 	private String lastDamanger;
+	public long lastDamagedTime;
 	public double bounty;
 	
 	// -------------------------------------------- //
@@ -62,6 +63,7 @@ public class FPlayer {
 		//this.lastPowerUpdateTime = System.currentTimeMillis();
 		this.lastLoginTime = System.currentTimeMillis();
 		this.mapAutoUpdating = false;
+		this.lastDamagedTime = 0;
 	}
 	
 	public void resetFactionData() {
@@ -175,6 +177,14 @@ public class FPlayer {
 	
 	public void setLastStoodAt(FLocation flocation) {
 		this.lastStoodAt = flocation;
+	}
+	
+	public void setLastDamagedTime(long time) {
+		this.lastDamagedTime = time;
+	}
+	
+	public long getLastDamagedTime() {
+		return this.lastDamagedTime;
 	}
 	
 	//----------------------------------------------//
@@ -626,5 +636,10 @@ public class FPlayer {
 			return null;
 		
 		return getPlayer().getServer().getPlayer(this.lastDamanger);
+	}
+	
+	public static void playerRanFromBattle(String playername) {
+		Factions.log("Running from battle code called: " + playername);
+		return;
 	}
 }

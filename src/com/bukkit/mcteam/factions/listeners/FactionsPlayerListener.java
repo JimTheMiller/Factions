@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.bukkit.mcteam.factions.Board;
 import com.bukkit.mcteam.factions.Claim;
@@ -244,6 +245,7 @@ public class FactionsPlayerListener extends PlayerListener {
 
 	@Override
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		Factions.log("' " + event.getPlayer().getName() + "' has just respawned");
 		Player player = event.getPlayer();
 		FPlayer me = FPlayer.get(player);
 		me.setLastDamangedBy(null);
@@ -283,6 +285,16 @@ public class FactionsPlayerListener extends PlayerListener {
 		if ( ! this.playerCanUseItemHere(player, block, event.getBucket())) {
 			event.setCancelled(true);
 			return;
+		}
+	}
+	
+	@Override
+	public void onPlayerQuit (PlayerQuitEvent event) {
+		if ((System.currentTimeMillis() - FPlayer.get(event.getPlayer()).getLastDamagedTime()) < 15000) {
+			Logger.getLogger("Minecraft").info("Player ran from battle: " + event.getPlayer().getName());
+			Factions.instance.startLogOffTimer(event.getPlayer().getName());
+		} else {
+			Logger.getLogger("Minecraft").info("Player just quit");
 		}
 	}
 }

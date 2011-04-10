@@ -1,5 +1,7 @@
 package com.bukkit.mcteam.factions.listeners;
 
+import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -24,6 +26,10 @@ public class FBountyEntityListener extends EntityListener {
 
 		if (deadFPlayer.getLastDamangedBy() == null)
 			return;
+		
+		if ((System.currentTimeMillis() - deadFPlayer.getLastDamagedTime()) > 15000) 
+			return;
+		
 
 		Account deadPlayerAccount = iConomy.getBank()
 			.getAccount(deadFPlayer.getName());

@@ -90,7 +90,7 @@ public class FCommandBuy extends FBaseCommand  {
 				.getAccount(me.getName());
 		
 			if (account.getBalance() < price * n)
-				n = (int)Math.round(account.getBalance() / price);
+				n = (int)Math.floor(account.getBalance() / price);
 			
 			double total = n * price;
 			account.subtract(total);

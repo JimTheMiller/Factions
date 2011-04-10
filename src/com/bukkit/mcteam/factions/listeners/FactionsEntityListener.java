@@ -48,7 +48,8 @@ public class FactionsEntityListener extends EntityListener {
 		if (fplayer.getLastDamangedBy() instanceof Player) {
 			
 			Entity eld = fplayer.getLastDamangedBy();
-			if (eld != null) {
+			if (eld != null &&
+				((System.currentTimeMillis() - fplayer.getLastDamagedTime()) <= 15000)) {
 				
 				FPlayer e = FPlayer.get((Player)eld);
 				/*
@@ -103,7 +104,9 @@ public class FactionsEntityListener extends EntityListener {
             
             if ((event.getEntity() instanceof Player)) {
     			Player p = (Player)event.getEntity();
-    			FPlayer.get(p).setLastDamangedBy(sub.getDamager());
+    			FPlayer fp = FPlayer.get(p);
+    			fp.setLastDamangedBy(sub.getDamager());
+    			fp.setLastDamagedTime(System.currentTimeMillis());
     		}
             
         } else if (event instanceof EntityDamageByProjectileEvent) {
@@ -115,7 +118,9 @@ public class FactionsEntityListener extends EntityListener {
             
             if ((event.getEntity() instanceof Player)) {
     			Player p = (Player)event.getEntity();
-    			FPlayer.get(p).setLastDamangedBy(sub.getDamager());
+    			FPlayer fp = FPlayer.get(p);
+    			fp.setLastDamangedBy(sub.getDamager());
+    			fp.setLastDamagedTime(System.currentTimeMillis());
     		}
         }
 	}
