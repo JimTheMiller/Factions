@@ -3,6 +3,7 @@ package com.bukkit.mcteam.factions.listeners;
 import java.text.MessageFormat;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -214,6 +215,11 @@ public class FactionsEntityListener extends EntityListener {
 	}
 	
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
+		if (event.getCreatureType() == CreatureType.SLIME || 
+			event.getCreatureType() == CreatureType.SQUID) {
+			event.setCancelled(true);
+		}
+		
 		if (event.isCancelled()) {
 			return;
 		}

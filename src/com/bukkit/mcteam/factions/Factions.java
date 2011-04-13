@@ -87,6 +87,7 @@ public class Factions extends JavaPlugin {
 	private final FactionsChunkListener chunkListener = new FactionsChunkListener();
 	private final FactionsIConomyListener iConomyListener = new FactionsIConomyListener();
 	public Integer givePlayersDaPowaReferenceInt = null;
+	public Integer inactiveTimerReferenceInt = null;
 	public static PermissionHandler Permissions;
 	public static Help helpPlugin;
 
@@ -172,6 +173,7 @@ public class Factions extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DEATH, this.entityListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.entityListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_EXPLODE, this.entityListener, Event.Priority.Normal, this);
@@ -238,6 +240,21 @@ public class Factions extends JavaPlugin {
 	            }
 	        , 30 * 21L, 120 * 21L);
 		}
+		
+		if (inactiveTimerReferenceInt == null) {
+			inactiveTimerReferenceInt = getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+	            public void run() {
+	            	log("removing inactive players");
+	            	long fourDays = 4 * 24 * 60 * 60 * 1000;
+	            	for (FPlayer fplayer : FPlayer.getAll()) {
+	            		if (System.currentTimeMillis() - fplayer.getLastLoginTime() > fourDays) {
+	            			fplayer.setPower(0);
+	            		}
+	            	}
+	              }
+	            }
+	        , 20 * 20L, 24 * 60 * 60 * 20L);
+		}
 		/*
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
@@ -281,6 +298,10 @@ public class Factions extends JavaPlugin {
 		if (givePlayersDaPowaReferenceInt != null) {
 			getServer().getScheduler().cancelTask(givePlayersDaPowaReferenceInt);
 			givePlayersDaPowaReferenceInt = null;
+		}
+		if (inactiveTimerReferenceInt != null) {
+			getServer().getScheduler().cancelTask(inactiveTimerReferenceInt);
+			inactiveTimerReferenceInt = null;
 		}
 		
 		log("Disabled");

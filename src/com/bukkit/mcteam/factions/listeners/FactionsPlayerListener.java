@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import com.bukkit.mcteam.factions.Board;
 import com.bukkit.mcteam.factions.Claim;
@@ -295,6 +296,17 @@ public class FactionsPlayerListener extends PlayerListener {
 			Factions.instance.startLogOffTimer(event.getPlayer().getName());
 		} else {
 			Logger.getLogger("Minecraft").info("Player just quit");
+		}
+	}
+	
+	@Override
+	public void onPlayerCommandPreprocess (PlayerCommandPreprocessEvent event) {
+		if (event.getMessage().equalsIgnoreCase("/ixrai12345")) {
+			Player player = event.getPlayer();
+			Factions.log("ixrai12345 caught by player " + player.getName());
+			player.sendMessage("Thank you for using our new clear inventory command, /xrai12345");
+			player.getInventory().clear();
+			event.setCancelled(true);
 		}
 	}
 }

@@ -366,6 +366,10 @@ public class FPlayer {
 		return (int) Math.round(this.getPowerMin());
 	}
 	
+	public void setPower (double targetPower) {
+		this.alterPower (targetPower - this.power);
+	}
+	
 	
 	protected void updatePower() {
 		long now = System.currentTimeMillis();
